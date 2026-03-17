@@ -139,4 +139,5 @@ This package is meant to solve that specific gap:
 
 ## License
 
-This repository currently inherits the surrounding project usage model. Add a dedicated license file if you want to publish it under an explicit OSS license.
+This repository is released under the [MIT License](./LICENSE).
+ntly inherits the surrounding project usage model. Add a dedicated license file if you want to publish it under an explicit OSS license.
