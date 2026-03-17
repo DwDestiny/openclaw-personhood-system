@@ -1,0 +1,54 @@
+{
+  "package": {
+    "name": "openclaw-personhood-system",
+    "version": "1.0.0"
+  },
+  "defaults": {
+    "agent": "mia",
+    "workspace": "~/.openclaw/workspace-{agent}",
+    "memory": {
+      "world": "memory/world.md",
+      "self": "memory/self.md",
+      "expression": "memory/expression.md",
+      "inbox": "memory/inbox/",
+      "daily": "memory/{date}.md"
+    },
+    "skills": {
+      "maintainer": "skills/personhood-document-maintainer/SKILL.md"
+    },
+    "cron": {
+      "dailyDistill": "30 23 * * *",
+      "selfEvolution": "0 2 * * 0",
+      "capabilityEvolver": "20 2 * * 0"
+    }
+  },
+  "maintenance": {
+    "capture": {
+      "description": "高认知输入任务尾部采集原料",
+      "target": "memory/inbox/ 或 memory/YYYY-MM-DD.md"
+    },
+    "light": {
+      "description": "heartbeat 高频轻量扫描",
+      "frequency": "30 分钟"
+    },
+    "normal": {
+      "description": "日总结常规升级",
+      "frequency": "每日 23:30"
+    },
+    "deep": {
+      "description": "周总结深度整理",
+      "frequency": "每周日 02:00"
+    }
+  },
+  "validation": {
+    "requiredFiles": [
+      "memory/world.md",
+      "memory/self.md",
+      "memory/expression.md",
+      "memory/inbox/README.md",
+      "skills/personhood-document-maintainer/SKILL.md"
+    ],
+    "checkExisting": true,
+    "backupBeforeOverwrite": true
+  }
+}
