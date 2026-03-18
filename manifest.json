@@ -1,52 +1,7 @@
 {
-  "name": "openclaw-personhood-system",
-  "version": "1.0.0",
-  "description": "OpenClaw 人格化成长系统 - 可一键配置的人格/认知/表达分层维护体系",
-  "author": "Mia",
-  "created": "2026-03-17",
-  "agents": ["mia", "main", "eric", "elena"],
-  "dependencies": [],
-  "files": {
-    "skills": [
-      "skills/personhood-document-maintainer/SKILL.md",
-      "skills/personhood-installer/SKILL.md"
-    ],
-    "docs": [
-      "docs/overview.md",
-      "docs/pre-install-checklist.md",
-      "docs/pre-hook-methodology.md",
-      "docs/post-hook-methodology.md",
-      "docs/capture-hook-selection-rules.md",
-      "docs/cron-hooking-plan.md",
-      "docs/weekly-evolution-and-skill-improvement.md"
-    ],
-    "templates": [
-      "templates/world.md",
-      "templates/self.md",
-      "templates/expression.md",
-      "templates/inbox-README.md"
-    ]
-  },
-  "cronTemplates": {
-    "daily-distill": {
-      "schedule": "30 23 * * *",
-      "mode": "normal",
-      "description": "每日人格化文档常规维护"
-    },
-    "self-evolution": {
-      "schedule": "0 2 * * 0",
-      "mode": "deep",
-      "description": "周级人格/认知深度维护"
-    },
-    "capability-evolver": {
-      "schedule": "20 2 * * 0",
-      "mode": "weekly-skill-evolution",
-      "description": "周级能力进化与 skill 体系复盘"
-    }
-  },
-  "install": {
-    "autoBackup": true,
-    "skipExisting": true,
-    "validateAfterInstall": true
-  }
+  "_comment": "DEPRECATED — manifest.json v1 已废弃，安装脚本已迁移到 scripts/install.sh（v2），请勿依赖此文件。",
+  "deprecated": true,
+  "superseded_by": "scripts/install.sh (v2)",
+  "legacy_version": "1.0.0",
+  "legacy_description": "旧版人格化成长系统，请参考 README.md 了解新版升级内容"
 }

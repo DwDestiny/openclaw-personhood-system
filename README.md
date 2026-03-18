@@ -1,143 +1,132 @@
-# OpenClaw Personhood System
+# OpenClaw Agent Bootstrap Kit
 
-A portable, installable personhood and long-term cognition layer for OpenClaw agents.
+通用智能体启动包 — 一键完成新智能体全套初始化。
 
-It helps an agent become more stable, more self-consistent, and more human over time by separating what should live in top-level memory, what belongs to world knowledge, what belongs to self-knowledge, and what should stay as unverified raw material.
+包含记忆体系、人格文档、通用技能、安全体系、定时任务，让新智能体开箱即用。
 
-![System architecture](./assets/images/architecture.png)
+![Architecture](./assets/images/architecture.png)
 
-## What This Package Solves
+## 功能
 
-Most agent workspaces eventually hit the same problems:
+| 模块 | 说明 |
+|------|------|
+| **人格文档** | SOUL.md / AGENTS.md / IDENTITY.md / HEARTBEAT.md |
+| **记忆系统** | 四层记忆体系（daily log / MEMORY.md / projects / inbox） |
+| **通用技能** | 20+ 个 skill（安全系 + 通用系） |
+| **安全体系** | 四层防御（卫士虾 + clawdefender + skill-vetter） |
+| **定时任务** | 日蒸馏 + 周提升，槽位自动错开 |
 
-- daily memory keeps growing, but no one distills it
-- stable rules, persona knowledge, and temporary observations get mixed together
-- the agent remembers many things, but still does not feel more coherent
-- after upgrades or workspace rebuilds, the hand-maintained memory structure is easy to lose
+## 快速开始
 
-This package turns that mess into a layered, recoverable system.
-
-## Core Idea
-
-Instead of stuffing everything into `MEMORY.md`, this package adds three extra long-term layers plus an inbox layer:
-
-- `memory/world.md` - stable external-world cognition
-- `memory/self.md` - stable self-knowledge about recurring strengths, risks, and growth direction
-- `memory/expression.md` - stable expression and tone-control rules
-- `memory/inbox/` - unverified cognition candidates that should not be promoted too early
-
-These layers work together with the existing OpenClaw files:
-
-- `AGENTS.md`
-- `USER.md`
-- `IDENTITY.md`
-- `MEMORY.md`
-- `memory/YYYY-MM-DD.md`
-
-## How It Works
-
-![Workflow](./assets/images/workflow.png)
-
-The package installs two core skills:
-
-### `personhood-installer`
-
-A one-shot installation entry for setting up the system in a target OpenClaw workspace.
-
-### `personhood-document-maintainer`
-
-The maintenance skill that keeps the layered documents clean over time.
-
-It supports four maintenance modes:
-
-![Maintenance modes](./assets/images/maintenance-modes.png)
-
-| Mode | Typical trigger | Goal |
-|------|------------------|------|
-| `capture` | after high-cognition tasks | leave raw material in daily memory or inbox |
-| `light` | heartbeat | do lightweight scanning and small corrections |
-| `normal` | daily distill | promote stable insights and clean document boundaries |
-| `deep` | weekly evolution | deeper cleanup, merge, downgrade, and long-term restructuring |
-
-## Installation
+### 新建智能体
 
 ```bash
-git clone https://github.com/DwDestiny/openclaw-personhood-system.git
+# 1. 创建 workspace
+openclaw agents add <agent_id>
+
+# 2. 运行 bootstrap kit
+bash install.sh <agent_id> --name <名字>
+```
+
+### 修复已有智能体
+
+```bash
+bash install.sh <agent_id> --repair
+```
+
+### 验证状态
+
+```bash
+bash install.sh <agent_id> --verify
+```
+
+## cron 槽位时间表
+
+**日蒸馏（每日）：**
+- 槽位 0 → 08:10
+- 槽位 1 → 10:25
+- 槽位 2 → 14:40
+- 槽位 3 → 21:55
+
+**周提升（周日）：**
+- 槽位 0 → 周日 02:00
+- 槽位 1 → 周日 02:20
+- 槽位 2 → 周日 02:40
+- 槽位 3 → 周日 03:00
+
+## 目录结构
+
+```
+openclaw-personhood-system/
+├── install.sh              # 主安装脚本
+├── SKILL.md               # OpenClaw skill 定义
+├── README.md
+├── LICENSE
+├── config/
+│   └── agent-cron-map.json  # cron 槽位分配表
+├── scripts/
+│   └── install.sh          # 核心安装脚本
+├── templates/
+│   ├── personality/         # 人格文档模板
+│   ├── memory/              # 记忆文件模板
+│   ├── security/            # 安全体系说明
+│   └── cron/                # cron 模板
+├── docs/
+│   └── SPEC.md              # 完整规格说明书
+└── skills/                  # 可选 skill 清单
+```
+
+## 技能清单（自动安装）
+
+**安全系（essential）：**
+`tuanziguardianclaw` · `clawdefender` · `skill-vetter` · `openclaw-memory-maintainer` · `proactive-agent-lite` · `self-improving` · `find-skills`
+
+**通用系：**
+`web_search` · `openclaw-minimax-router` · `image-generation` · `social-content` · `brainstorming` · `pinchtab-browser` · `feishu-*` · `github` · `gmail`
+
+## 安全体系
+
+```
+第一层：tuanziguardianclaw（卫士虾核心内核）
+  └─ 监控/拦截所有危险操作，Skill 沙箱
+
+第二层：clawdefender（输入扫描器）
+  └─ 检测注入/泄露/路径遍历
+
+第三层：skill-vetter（技能安装审查）
+  └─ 新 skill 安装前安全审查
+
+第四层：security-auditor + healthcheck（可选）
+  └─ 代码审计 + 主机加固
+```
+
+## 文件覆盖规则
+
+| 文件 | 已有时 | 不存在时 |
+|------|--------|---------|
+| IDENTITY.md / USER.md / MEMORY.md | 不覆盖 | 创建 |
+| memory/*.md | 不覆盖 | 创建 |
+| bootstrap.done | 覆盖 | 创建 |
+| skills/ | 已有软链接跳过 | 创建软链接 |
+
+## 与 agent-creator 的关系
+
+```
+agent-creator（官方流程） → bootstrap-kit（深度配置）
+         ↓
+   创建 workspace
+         ↓
+   运行 bootstrap-kit
+         ↓
+   一键完成：记忆+人格+技能+安全+cron
+```
+
+## 升级
+
+```bash
 cd openclaw-personhood-system
-./install.sh --agent mia
+git pull origin main
 ```
 
-Before installing, read `docs/pre-install-checklist.md`.
-
-## Install Options
-
-```bash
-./install.sh --agent <agent-name> [options]
-
-Options:
-  --agent <name>      target agent (required)
-  --workspace <path>  target workspace path
-  --dry-run           preview only, do not write files
-  --force             overwrite existing files
-  --skip-cron         skip cron setup file generation
-  --verbose           print more details
-  --uninstall         remove the installed package files
-```
-
-## Cron Design
-
-The package is designed to work with three recurring jobs:
-
-| Job | Schedule | Purpose |
-|-----|----------|---------|
-| daily distill | every day 23:30 | normal document maintenance |
-| self evolution | Sunday 02:00 | deep personhood cleanup |
-| capability evolver | Sunday 02:20 | separate weekly capability review |
-
-This keeps personhood maintenance and capability evolution related but separate.
-
-## Repository Guide
-
-- `install.sh` - installation and uninstall entry
-- `manifest.json` - package metadata
-- `skills/personhood-installer/` - installer skill
-- `skills/personhood-document-maintainer/` - document maintainer skill
-- `templates/` - initial layered memory files
-- `docs/` - methodology, architecture, hooks, cron plan, and maintenance rules
-- `assets/images/` - diagrams used in the README
-
-## Documentation Map
-
-- `docs/overview.md` - high-level overview
-- `docs/installable-package-design.md` - why this is packaged instead of patching core prompts
-- `docs/document-maintenance-methodology.md` - maintenance methodology
-- `docs/document-maintenance-skill-spec.md` - skill design spec
-- `docs/pre-hook-methodology.md` - when to hook before task execution
-- `docs/post-hook-methodology.md` - how to decide `capture` / `light` / `normal` / `deep`
-- `docs/capture-hook-selection-rules.md` - task selection rules for capture
-- `docs/cron-hooking-plan.md` - cron wiring plan
-- `docs/weekly-evolution-and-skill-improvement.md` - separation of personhood evolution and capability evolution
-
-## Compatibility
-
-- OpenClaw 0.9.0+
-- supports `mia`, `main`, `eric`, `elena`, or custom agents
-- works on top of OpenClaw heartbeat, memory search, session-memory, and cron
-
-## Why It Matters
-
-A lot of agent systems remember more over time, but do not actually become better organized.
-
-This package is meant to solve that specific gap:
-
-- not just more memory
-- but better memory boundaries
-- not just more notes
-- but a maintainable personhood architecture
-- not just one workspace hack
-- but a reusable public package
-
-## License
-
-This repository is released under the [MIT License](./LICENSE).
-ntly inherits the surrounding project usage model. Add a dedicated license file if you want to publish it under an explicit OSS license.
+---
+License: MIT
